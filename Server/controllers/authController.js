@@ -54,10 +54,10 @@ const authController = {
                 const chechpass = await bcrypt.compare(password, findUser.password)
 
                 if(chechpass){
-                    //const token = jwt.sign({ userId: findUser._id, userEmail: findUser.email, userRole: findUser.Role }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
                     jwt.sign({ userId: findUser._id, userEmail: findUser.email}, process.env.SECRET_KEY, {algorithm: 'HS512'},(err, token)=>{
 
-                    console.log(token);
+
 
                     if(err) {
                         console.log(err);
