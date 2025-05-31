@@ -5,6 +5,11 @@
   "scripts": {
     "start": "concurrently \"npm run start:frontend\" \"npm run start:backend\"",
     "start:frontend": "cd Client && npm run dev",
-    "start:backend": "cd Server && node app.js"
+    "start:backend": "cd Server && node app.js",
+    "build": "concurrently \"npm run build:frontend\" \"npm run build:backend\"",
+    "build:frontend": "cd Client && npm run build",
+    "build:backend": "echo \"No build step for backend\"",
+    "dev": "npm run start",
+    "test": "echo \"Error: no test specified\" && exit 1"
   }
 }
