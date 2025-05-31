@@ -3,7 +3,7 @@
     "routes": [
     {
       "src": "/(.*)",
-      "dest": "Server/app.js"
+      "dest": "app.js"
     }
   ]
 }
