@@ -15,7 +15,7 @@ dotenv.config();
 const {PORT, DB_USER, DB_PASSWORD, DB_URL, SECRET_KEY} = process.env
 const port = PORT;
 const dbURL = DB_URL
-//const dbURL = `mongodb+srv://${DB_USER}:${DB_PASSWORD}@cluster0.avqxm6z.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
+
 
 mongoose.connect(dbURL).then((connection)=>{
      //console.log('db is connected', connection);
@@ -62,6 +62,5 @@ app.use((err,res) => {
     });
 })
 
-app.listen(port, ()=>{
-    console.log(`server is running at ${port}`)
-});
+
+module.exports = app;
