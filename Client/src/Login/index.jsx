@@ -16,7 +16,7 @@ export function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     //axios.post('http://localhost:3000/auth/signIn', {email, password})
-    axios.post('http://podcast-two-zeta.vercel.app/auth/signIn', {email, password})
+    axios.post('https://podcast-two-zeta.vercel.app/auth/signIn', {email, password})
     .then(result => {
       console.log(result.data.status);
       if(result.data.status === "success"){
