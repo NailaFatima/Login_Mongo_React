@@ -1,66 +1,48 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const dotenv = require ('dotenv');
+const dotenv = require('dotenv');
 const jwt = require('jsonwebtoken');
 const cors = require('cors');
-const CookieParser = require('cookie-parser');
+const cookieParser = require('cookie-parser');
 const userRoutes = require('./routes/userRoute');
 const authRoute = require('./routes/authRoute');
 
-const app = express();
-app.use(CookieParser());
-
 dotenv.config();
 
-const {PORT, DB_USER, DB_PASSWORD, DB_URL, SECRET_KEY} = process.env
-const port = PORT;
-const dbURL = DB_URL
-
-
-mongoose.connect(dbURL).then((connection)=>{
-     //console.log('db is connected', connection);
-     console.log('db is connected');
-});
+const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use(cookieParser());
 
-// mouting the routes
+// Environment variables
+const { DB_URL, SECRET_KEY } = process.env;
+
+// ✅ Safe DB connection
+mongoose
+    .connect(DB_URL, { useNewUrlParser: true, useUnifiedTopology: true })
+    .then(() => console.log('✅ MongoDB connected'))
+    .catch((err) => {
+        console.error('❌ MongoDB connection error:', err.message);
+    });
+
+// Routes
 app.use('/api/users', userRoutes);
 app.use('/auth', authRoute);
 
-
-
-const protectRouteMiddleware = (req, res, next) =>{
-    try{
-        const { token } = req.cookies;
-        const decodedToken = jwt.verify(token, SECRET_KEY);
-        if(decodedToken){
-            const userId = decodedToken.id;
-            req.userId = userId;
-            next();
-        } 
-    } catch(error){
-        next(error);
-    }
-}
-
-app.get('/logout', (req, res)=> {
+app.get('/logout', (req, res) => {
     res.clearCookie('token');
-    res.status(200).json({
-        message: 'user logged out successfully'
-    })
-})
+    res.status(200).json({ message: 'user logged out successfully' });
+});
 
-app.use((err,res) => {
+// ✅ Correct error-handling middleware
+app.use((err, req, res, next) => {
     const statusCode = err.statusCode || 500;
     const message = err.message || 'Internal Server Error';
 
-    res.status(statusCode).json({
-        status: statusCode,
-        message: message
-    });
-})
+    console.error('❌ Server Error:', message);
+    res.status(statusCode).json({ status: statusCode, message });
+});
 
-
+// ✅ Required for Vercel serverless
 module.exports = app;
