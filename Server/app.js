@@ -23,12 +23,18 @@ mongoose
     .connect(DB_URL, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => console.log('✅ MongoDB connected'))
     .catch((err) => {
-        console.error('❌ MongoDB connection error:', err.message);
+        console.error('MongoDB connection error:', err.message);
     });
 
 // Routes
 app.use('/api/users', userRoutes);
 app.use('/auth', authRoute);
+app.get('/', (req, res) => {
+    res.status(200).json({
+        message: 'Podcast Admin API is running 🚀',
+    });
+});
+
 
 app.get('/logout', (req, res) => {
     res.clearCookie('token');
@@ -40,7 +46,7 @@ app.use((err, req, res, next) => {
     const statusCode = err.statusCode || 500;
     const message = err.message || 'Internal Server Error';
 
-    console.error('❌ Server Error:', message);
+    console.error('Server Error:', message);
     res.status(statusCode).json({ status: statusCode, message });
 });
 
